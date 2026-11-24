@@ -2,18 +2,18 @@
 
 ```mermaid
 flowchart TD
-    A([Start]) --> B[/Enter master password/]
-    B --> C{Vault file exists?}
-    C -- No --> D[Create new vault]
-    C -- Yes --> E[Derive key and decrypt]
-    E --> F{Decryption OK?}
-    F -- No --> G[Show error] --> Z([Exit])
-    F -- Yes --> H
-    D --> H{Menu}
-    H -- Add --> I[Store site, username, password] --> J[Encrypt and save] --> H
-    H -- Get --> K[Show entry] --> H
-    H -- Delete --> L[Remove entry] --> J
-    H -- List --> M[Show sites] --> H
-    H -- New password --> N[Generate random password] --> H
+    A([Start]) --> B{Vault file exists?}
+    B -- No --> C[/Create master password/] --> D[Create new vault]
+    B -- Yes --> E[/Enter master password/] --> F[Derive key and decrypt]
+    F --> G{Decryption OK?}
+    G -- No --> I[Show error] --> Z([Exit])
+    G -- Yes --> H{Menu}
+    D --> H
+    H -- Add --> J[Store site, username, password] --> K[Encrypt and save]
+    H -- Get --> L[Show entry] --> H
+    H -- Delete --> M[Remove entry] --> K
+    H -- List --> N[Show sites] --> H
+    H -- New password --> O[Generate random password] --> H
+    K --> H
     H -- Quit --> Z
 ```
