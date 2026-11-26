@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
-from password_manager import PasswordManager
+from password_manager.password_manager import PasswordManager
+from password_manager.password_strength import REQUIREMENTS, is_strong_password
 import os
 
 
@@ -63,6 +64,13 @@ class PasswordManagerUI:
         if not master_password:
             messagebox.showwarning("Input Error", "Please enter a master password.")
             return
+
+        new_account = not (os.path.exists("encryption.key") or os.path.exists("passwords.json"))
+        if new_account:
+            if not is_strong_password(master_password):
+                messagebox.showwarning("Weak Master Password", REQUIREMENTS)
+                return
+            messagebox.showinfo("Master Password", "Password meets strength requirements.")
         
         try:
             self.pm = PasswordManager(master_password)
@@ -178,7 +186,15 @@ class PasswordManagerUI:
             if self.pm.service_exists(service):
                 if not messagebox.askyesno("Confirm", f"'{service}' already exists. Overwrite?"):
                     return
-            
+
+            if is_strong_password(password):
+                messagebox.showinfo("Password Strength", "Password meets strength requirements.")
+            else:
+                messagebox.showinfo(
+                    "Password Strength",
+                    f"Weak password; changing it is optional. {REQUIREMENTS}",
+                )
+
             try:
                 self.pm.add_password(service, username, password)
                 messagebox.showinfo("Success", f"Password for '{service}' saved successfully!")
